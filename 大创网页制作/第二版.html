@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 移动端视口设置 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>航空仲裁资料库</title>
+    
+    <!-- 引入Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* 自定义动画效果 */
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 活动标签指示器 */
+        .nav-link.active::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: #3b82f6;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-sm fixed w-full z-10">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <!-- 网站Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="text-xl font-bold text-blue-600">航空仲裁资料库</span>
+                </div>
+                
+                <!-- 导航链接 -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#laws" class="nav-link active">航空仲裁法规</a>
+                    <a href="#cases" class="nav-link">仲裁案例</a>
+                    <a href="#papers" class="nav-link">学术论文</a>
+                    <a href="#advice" class="nav-link">实务建议</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="pt-20 pb-12">
+        <!-- 搜索栏 -->
+        <div class="max-w-3xl mx-auto px-4 mb-8">
+            <input type="search" 
+                   id="searchInput"
+                   class="w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                   placeholder="输入关键词检索文件...">
+        </div>
+
+        <!-- 动态内容容器 -->
+        <div class="max-w-7xl mx-auto px-4">
+            <!-- 各内容区块将通过JavaScript动态加载 -->
+            <div id="contentContainer"></div>
+        </div>
+    </main>
+
+<script>
+/**
+ * 模拟数据库（实际开发应使用API获取）
+ * 数据结构说明：
+ * - id: 唯一标识符
+ * - title: 显示标题
+ * - type: 分类标签
+ * - abstract: 摘要内容
+ * - links: 相关链接集合
+ */
+const database = {
+    laws: [
+        {
+            id: 'law-001',
+            title: '蒙特利尔公约全文',
+            type: '国际公约',
+            abstract: '1999年通过的现代化航空责任制度...',
+            links: {
+                text: '/laws/montreal',
+                pdf: '/laws/montreal.pdf',
+                history: '/laws/montreal/history'
+            }
+        },
+        {
+            id: 'law-002',
+            title: '航空仲裁规则',
+            type: '合同范本',
+            abstract: '国际航空运输合同标准条款...',
+            links: {
+                text: '/laws/transport-agreement',
+                pdf: '航空仲裁规则.pdf',
+                download:"航空仲裁规则.pdf"
+            }
+        }
+    ],
+    
+
+    cases: [
+        {
+            id: 'case-2022',
+            title: '2022国际货运争议仲裁案',
+            type: '货物运输',
+            abstract: '典型航空货物损坏赔偿案例...',
+            links: {
+                detail: '/cases/2022-cargo',
+                analysis: '/cases/2022-cargo/analysis'
+            }
+        }
+    ],
+    papers: [
+        {
+            id: 'paper-012',
+            title: '航空仲裁机制发展研究',
+            type: '制度研究',
+            author: '李教授',
+            abstract: '对国际航空仲裁程序的创新性分析...',
+            links: {
+                detail: '/papers/012',
+                download: '/papers/012.pdf'
+            }
+        }
+    ],
+    advice: [
+        {
+            id: 'guide-003',
+            title: '航空索赔实务指引',
+            type: '操作指南',
+            abstract: '2023年最新版取证流程规范...',
+            links: {
+                detail: '/advice/003',
+                template: '/advice/003/template.docx'
+            }
+        }
+    ]
+};
+
+/**
+ * 渲染内容卡片
+ * @param {string} section 内容分类
+ * @param {Array} items 数据条目
+ */
+function renderCards(section, items) {
+    return items.map(item => `
+        <div class="card bg-white rounded-xl p-6 mb-6">
+            <!-- 主标题与分类标签 -->
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-semibold">
+                    <a href="${item.links.detail}" 
+                       class="text-blue-600 hover:text-blue-800 transition-colors"
+                       data-nav="${section}">
+                        ${item.title}
+                    </a>
+                </h3>
+                <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                    ${item.type}
+                </span>
+            </div>
+
+            <!-- 摘要内容 -->
+            <p class="text-gray-600 mb-4">${item.abstract}</p>
+
+            <!-- 操作链接区 -->
+            <div class="border-t pt-4 flex space-x-4">
+                ${Object.entries(item.links).map(([type, url]) => `
+                    <a href="${url}" 
+                       class="text-sm text-gray-500 hover:text-blue-600
+                              ${type === 'detail' ? 'font-medium' : ''}"
+                       data-link-type="${type}">
+                        ${getLinkLabel(type)}
+                    </a>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+}
+
+/**
+ * 获取链接显示文本
+ * @param {string} type 链接类型
+ */
+function getLinkLabel(type) {
+    const labels = {
+        detail: '查看详情',
+        pdf: 'PDF全文',
+        download: '下载文档',
+        analysis: '案例解析',
+        history: '修订历史',
+        template: '下载模板'
+    };
+    return labels[type] || type;
+}
+
+/**
+ * 初始化页面内容
+ */
+function initContent() {
+    const container = document.getElementById('contentContainer');
+    
+    // 清空现有内容
+    container.innerHTML = '';
+
+    // 遍历所有分类
+    Object.entries(database).forEach(([section, items]) => {
+        const sectionHTML = `
+            <section id="${section}" class="mb-12">
+                <h2 class="text-2xl font-bold mb-6">${getSectionTitle(section)}</h2>
+                ${renderCards(section, items)}
+            </section>
+        `;
+        container.innerHTML += sectionHTML;
+    });
+}
+
+/**
+ * 获取分类标题
+ * @param {string} section 分类标识
+ */
+function getSectionTitle(section) {
+    const titles = {
+        laws: '航空仲裁法规',
+        cases: '仲裁案例',
+        papers: '学术论文',
+        advice: '实务建议'
+    };
+    return titles[section] || section;
+}
+
+/**
+ * 搜索功能实现
+ */
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    const keyword = e.target.value.toLowerCase();
+    document.querySelectorAll('.card').forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(keyword) ? 'block' : 'none';
+    });
+});
+
+/**
+ * 导航交互逻辑
+ */
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // 更新活动状态
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+
+        // 滚动到对应区块
+        const targetId = this.getAttribute('href');
+        document.querySelector(targetId).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});
+
+// 页面初始化
+document.addEventListener('DOMContentLoaded', initContent);
+</script>
+</body>
+</html>

@@ -56,14 +56,14 @@ const database = {
             title: '蒙特利尔公约全文',
             type: '国际公约',
             abstract: '1999年通过的现代化航空责任制度...',
-            links: { text: '/laws/montreal', pdf: '/laws/montreal.pdf', history: '/laws/montreal/history' }
+            links: {  pdf: '/laws/montreal.pdf', download:'/laws/montreal/history' }
         },
         {
             id: 'law-002',
             title: '航空仲裁规则',
-            type: '合同范本',
+            type: '法案规则',
             abstract: '国际航空运输合同标准条款...',
-            links: { text: '/laws/transport-agreement', pdf: '航空仲裁规则.pdf', download:"航空仲裁规则.pdf" }
+            links: {  pdf: '航空仲裁规则.pdf', download:"航空仲裁规则.pdf" }
         }
     ],
     cases: [
@@ -162,20 +162,45 @@ document.addEventListener('DOMContentLoaded', initContent);
         websites: [
             {
                 id: 'web-001',
-                title: '国际民航组织法律库',
-                type: '官方资源',
-                abstract: 'ICAO官方法律文件数据库，包含国际航空公约全文',
-                links: { url: 'https://www.icao.int/legal' },
+                title: '长龙航空申请撤销仲裁裁决诉讼',
+                type: '新闻报道',
+                abstract: '长龙航空申请撤销仲裁裁决诉讼全文',
+                links: { url: 'https://wap.stockstar.com/detail/RB2025022800044271' },
                 favicon: 'https://www.icao.int/favicon.ico'
             },
             {
                 id: 'web-002',
-                title: '航空法律数据库',
-                type: '专业平台',
-                abstract: '全球航空法律案例查询系统',
-                links: { url: 'https://example.com' },
+                title: '空中丝绸之路投资贸易争端解决中心成立',
+                type: '新闻报道',
+                abstract: '空中丝绸之路投资贸易争端解决中心在沪成立，首部仲裁机构航空专门规则发布',
+                links: { url: 'https://www.toutiao.com/article/7306828187366572578/?upstream_biz=doubao&source=m_redirect' },
+                favicon: 'https://example.com/favicon.ico'
+            },
+            {
+                id: 'web-003',
+                title: '上海国际航空仲裁院十周年',
+                type: '新闻报道',
+                abstract: '历经十年，在国际航空争议解决领域发出“上海声音”',
+                links: { url: 'https://www.toutiao.com/article/7426504422001230374/?upstream_biz=doubao&source=m_redirect&wid=1740810909314' },
+                favicon: 'https://example.com/favicon.ico'
+            },
+            {
+                id: 'web-004',
+                title: '智慧民航，创新未来',
+                type: '新闻报道',
+                abstract: '智慧民航，创新未来——上海国际航空仲裁院亮相第二届CATA航空大会',
+                links: { url: 'https://www.shiac.org/pc/SHIAC?moduleCode=search&securityId=CgkR7tncbbsEU1DtUACJNw' },
+                favicon: 'https://example.com/favicon.ico'
+            },
+            {
+                id: 'web-005',
+                title: '上海国际航空仲裁院“2022仲裁助航”专项机制启动',
+                type: '新闻报道',
+                abstract: 'SHIAC公告 | 上海国际航空仲裁院“2022仲裁助航”专项机制启动',
+                links: { url: 'https://www.shiac.org/pc/SHIAC?moduleCode=search&securityId=j928YU5OLQq8Byhu1O7xRQ' },
                 favicon: 'https://example.com/favicon.ico'
             }
+
         ]
     };
     
@@ -248,4 +273,3 @@ document.addEventListener('DOMContentLoaded', initContent);
 </script>
 </body>
 </html>
-

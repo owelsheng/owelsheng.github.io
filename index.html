@@ -21,6 +21,13 @@
             background: #3b82f6;
             margin-top: 0.5rem;
         }
+        .foldable-content.collapsed { display: none; }
+        .toggle-fold {
+        display: block; text-align: center; padding: 8px;
+        background: #f8fafc; color: #3b82f6; cursor: pointer;
+        border-radius: 0 0 8px 8px; margin-top: -6px;
+        }
+        
     </style>
 </head>
 <body class="bg-gray-50">
@@ -71,6 +78,27 @@ const database = {
             type: '国际公约',
             abstract: '承认及执行 外国仲裁裁决公约...',
             links: { pdf: '纽约公约.pdf', download:'纽约公约.pdf' }
+        },
+        {
+            id: 'law-005',
+            title: '海南自由贸易港国际商事仲裁发展若干规定',
+            type: '法案规定',
+            abstract: '为了促进海南自由贸易港国际商事仲裁事业发展，提高仲裁公信力，创新多元商事纠纷解决机制...',
+            links: { pdf: '海南自由贸易港国际商事仲裁发展若干规定(FBM-CLI.10.7546869).pdf', download:'海南自由贸易港国际商事仲裁发展若干规定(FBM-CLI.10.7546869).pdf' }
+        },
+        {
+            id: 'law-006',
+            title: '上海市推进国际商事仲裁中心建设条例',
+            type: '建设条例',
+            abstract: '为了推进国际商事仲裁中心建设，加强涉外法治保障和服务工作，营造市场化、法治化、国际化一流营商环境...',
+            links: { pdf: '上海市推进国际商事仲裁中心建设条例(FBM-CLI.10.7270924).pdf', download:'上海市推进国际商事仲裁中心建设条例(FBM-CLI.10.7270924).pdf' }
+        },
+        {
+            id: 'law-007',
+            title: '中华人民共和国仲裁法(2017修正)',
+            type: '法律条约',
+            abstract: '为保证公正、及时地仲裁经济纠纷，保护当事人的合法权益，保障社会主义市场经济健康发展，制定本法...',
+            links: { pdf: '中华人民共和国仲裁法(2017修正)(FBM-CLI.1.301395).pdf', download:'中华人民共和国仲裁法(2017修正)(FBM-CLI.1.301395).pdf' }
         }
     ],
     cases: [
@@ -130,6 +158,7 @@ const database = {
             abstract: '对航空器买卖合同纠纷仲裁案进行详细分析...',
             links: { detail: '上海国际航空仲裁院近年典型案例 2个1746608465.pdf', analysis: '上海国际航空仲裁院近年典型案例 2个1746608465.pdf' }
         }
+       
     ],
     papers: [
         
@@ -174,6 +203,34 @@ const database = {
             type: '案例研究',
             abstract: '可仲裁性视角下航空争议类型...',
             links: { detail: '可仲裁性视角下航空争议类型.pdf', download: '可仲裁性视角下航空争议类型.pdf' }
+        },
+        {
+            id: 'paper-019',
+            title: '国际航空仲裁制度研究',
+            type: '论文研究',
+            abstract: ' 中国航空仲裁存在适用范围不一致、临时仲裁承认与执行不对等、上海国际航空仲裁院的发展面临诸多挑战等问题 ...',
+            links: { detail: '国际航空仲裁制度研究——兼评1999年《蒙特利尔公约》第34条.pdf', download: '国际航空仲裁制度研究——兼评1999年《蒙特利尔公约》第34条.pdf' }
+        },
+        {
+            id: 'paper-020',
+            title: '论航空仲裁机制在中国的发展',
+            type: '论文研究',
+            abstract: '：为适应中国航空运输业、航空产业发展的需要，航空仲裁机制在中国已有一定程度的发展...',
+            links: { detail: '论航空仲裁机制在中国的发展_罗超.pdf', download: '论航空仲裁机制在中国的发展_罗超.pdf' }
+        },
+        {
+            id: 'paper-021',
+            title: '论在我国国际航空领域引入临时仲裁制度',
+            type: '论文研究',
+            abstract: '近年来，我国航空运输业发展迅速，国际航空纠纷也不断增加，我国需要及时顺应时代发展的要求...',
+            links: { detail: '论在我国国际航空领域引入临时仲裁制度_董肖肖.pdf', download: '论在我国国际航空领域引入临时仲裁制度_董肖肖.pdf' }
+        },
+        {
+            id: 'paper-022',
+            title: '中国自贸区建设视域下构建海事临时仲裁立法制度研究',
+            type: '论文研究',
+            abstract: '临时仲裁作为一种囯际通行的争端解决机制，特别是在海事领域，具有不可比拟的优势...',
+            links: { detail: '中国自贸区建设视域下构建海事临时仲裁立法制度研究_易彦辰.pdf', download: '中国自贸区建设视域下构建海事临时仲裁立法制度研究_易彦辰.pdf' }
         }
     ],
     advice: [
@@ -207,6 +264,29 @@ function renderCards(section, items) {
         </div>
     `).join('');
 }
+const DEFAULT_SHOW_ITEMS = 5;
+
+function renderFoldableSection(section, items) {
+    const visibleItems = items.slice(0, DEFAULT_SHOW_ITEMS);
+    const hiddenItems = items.slice(DEFAULT_SHOW_ITEMS);
+    
+    return `
+        <div>
+            ${renderCards(section, visibleItems)}
+            <div class="foldable-content ${hiddenItems.length ? 'collapsed' : ''}">
+                ${hiddenItems.length ? renderCards(section, hiddenItems) : ''}
+            </div>
+            ${hiddenItems.length > 0 ? `
+            <div class="toggle-fold" onclick="
+                this.previousElementSibling.classList.toggle('collapsed');
+                this.textContent = this.previousElementSibling.classList.contains('collapsed') 
+                    ? '显示更多 (共${items.length}条)' 
+                    : '收起内容';
+            ">显示更多 (共${items.length}条)</div>
+            ` : ''}
+        </div>
+    `;
+}
 function getLinkLabel(type) {
     const labels = {
         detail: '查看详情', pdf: 'PDF全文', download: '下载文档',
@@ -219,7 +299,7 @@ function initContent() {
     container.innerHTML = Object.entries(database).map(([section, items]) => `
         <section id="${section}" class="mb-12">
             <h2 class="text-2xl font-bold mb-6">${getSectionTitle(section)}</h2>
-            ${renderCards(section, items)}
+            ${renderFoldableSection(section, items)}
         </section>
     `).join('');
 }
@@ -290,7 +370,284 @@ document.addEventListener('DOMContentLoaded', initContent);
                 abstract: 'SHIAC公告 | 上海国际航空仲裁院“2022仲裁助航”专项机制启动',
                 links: { url: 'https://www.shiac.org/pc/SHIAC?moduleCode=search&securityId=j928YU5OLQq8Byhu1O7xRQ' },
                 favicon: 'https://example.com/favicon.ico'
+            },
+            {
+                id: 'web-006',
+                title: '杭州国际航空航运仲裁院成功受理三起大标的额航空航运仲裁案件',
+                type: '新闻报道',
+                abstract: '近日，杭州国际航空航运仲裁院（以下简称航空航运仲裁院）正式启动运行，并成功受理三起涉航空航运领域仲裁案件，争议标的额逾两亿元人民币',
+                links: { url: 'https://www.hzarbitration.org.cn/content/content_9014773.html' },
+                favicon: 'https://example.com/favicon.ico'
+            },
+            {
+                id: 'web-007',
+                title: '杭州国际航空航运仲裁院成立大会暨航空航运纠纷多元化解法治讲堂顺利召开',
+                type: '新闻报道',
+                abstract: '杭州国际航空航运仲裁院成立大会暨航空航运纠纷多元化解法治讲堂顺利召开。',
+                links: { url: 'https://www.hzarbitration.org.cn/content/content_8974900.html' },
+                favicon: 'https://example.com/favicon.ico'
+            },
+            {
+                id: 'web-008',
+                title: '杭州国际航空航运仲裁院筹建工作座谈会顺利召开',
+                type: '新闻报道',
+                abstract: '杭州国际航空航运仲裁院筹建工作座谈会顺利召开。',
+                links: { url: 'https://www.hzarbitration.org.cn/content/content_8777714.html' },
+                favicon: 'https://example.com/favicon.ico'
+            },
+            {
+                id: 'web-009',
+                title: '杭州仲裁委员会应邀参加长江经济带航运仲裁联盟成立仪式暨内河航运仲裁高质量发展研讨会',
+                type: '新闻报道',
+                abstract: '由上海仲裁委员会、武汉仲裁委员会和重庆仲裁委员会联合主办的长江经济带航运仲裁联盟（以下简称联盟）成立仪式暨内河航运仲裁高质量发展研讨会在上海国际仲裁会客厅·外滩沙龙举办...',
+                links: { url: 'https://www.hzarbitration.org.cn/content/content_8762737.html' },
+                favicon: 'https://example.com/favicon.ico'
+            },
+            {
+                id: 'web-010',
+                title: '杭州仲裁委员会应邀参加第六届中国航空航天产业法治高峰论坛暨2023年航空法与空间法国际研讨会',
+                type: '新闻报道',
+                abstract: '第六届中国航空航天产业法治高峰论坛暨2023年航空法与空间法国际研讨会在南京举行。',
+                links: { url: 'https://www.hzarbitration.org.cn/content/content_8663624.html' },
+                favicon: 'https://example.com/favicon.ico'
+            },
+            {
+                id: 'web-011',
+                title: '《贸仲仲裁裁决域外承认与执行案例选评》：创新研究助力仲裁裁决跨境执行',
+                type: '新闻报道',
+                abstract: '《贸仲仲裁裁决域外承认与执行案例选评》：创新研究助力仲裁裁决跨境执行',
+                links: { url: 'https://www.cietac.org/articles/33681' },
+                favicon: 'https://example.com/favicon.ico'
+            },
+            {
+                id: 'web-012',
+                title: '贸仲丝绸之路仲裁中心与郑州律协涉外委赴河南民航发展投资集团调研 2025年6月20日',
+                type: '新闻报道',
+                abstract: '贸仲丝绸之路仲裁中心与郑州律协涉外委赴河南民航发展投资集团调研 2025年6月20日',
+                links: { url: ' https://www.cietac.org/articles/33611' },
+                favicon: 'https://example.com/favicon.ico'
+            },
+            {
+                id: 'web-013',
+                title: '2025航空航天产业仲裁大会在西安成功举办',
+                type: '新闻报道',
+                abstract: '2025航空航天产业仲裁大会在西安成功举办',
+                links: { url: '  https://www.cietac.org/articles/33367' },
+                favicon: 'https://example.com/favicon.ico'
+            },
+            {
+                id: 'web-014',
+                title: '2025年“海丝仲裁沙龙”系列讲座第三期:发展航空仲裁的几个关键环节探讨',
+                type: '新闻报道',
+                abstract: '2025年“海丝仲裁沙龙”系列讲座第三期:发展航空仲裁的几个关键环节探讨',
+                links: { url: 'https://www.cmac.org.cn/index.php?id=993' },
+                favicon: 'https://example.com/favicon.ico'
+            }, 
+            {
+                id: 'web-015',
+                title: '中国海仲航空多元化争议解决座谈会暨新聘航空仲裁员聘书颁发仪式在京举行',
+                type: '新闻报道',
+                abstract: '中国海仲航空多元化争议解决座谈会暨新聘航空仲裁员聘书颁发仪式在京举行',
+                links: { url: 'https://www.cmac.org.cn/index.php?id=279' },
+                favicon: 'https://example.com/favicon.ico'
+            },
+            {
+                id: 'web-016',
+                title: '海仲委航空仲裁及调解培训在京成功举办',
+                type: '新闻报道',
+                abstract: '中海仲委航空仲裁及调解培训在京成功举办',
+                links: { url: 'https://www.cmac.org.cn/index.php?id=324' },
+                favicon: 'https://example.com/favicon.ico'
+            },
+                        {
+                id: 'web-017',
+                title: 'SHIAC航空法律观见 | 航空仲裁典型案例二：无人机外观设计权益归属协议纠纷的仲裁案',
+                type: '案例分析', 
+                abstract: '上海国际仲裁中心处理的无人机外观设计知识产权纠纷仲裁案例',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=cases&securityId=GgvpDtzQfP95HTJWxpaTeg' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-018',
+                title: 'SHIAC航空法律观见｜航空仲裁典型案例一：民航适航技术开发服务纠纷仲裁案',
+                type: '案例分析',
+                abstract: '民航适航技术开发服务合同纠纷的仲裁解决全过程',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=cases&securityId=WwyPbxDTmVFF6QjaN_bfww' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-019', 
+                title: '国际航空地面服务协议履行纠纷的仲裁解决',
+                type: '案例分析',
+                abstract: '境外航空公司在华地面服务协议纠纷的仲裁实践',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=cases&securityId=l3xFbEb8a4N0vCsvSzgkcw' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-020',
+                title: '上海国际航空仲裁院近年典型案例之航空食品合同调解案',
+                type: '案例分析',
+                abstract: '上海国际航空仲裁院近年典型案例之航空食品合同调解案',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=cases&securityId=PaOsNi2d_kmp1BkbFwnLGA' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+                        {
+                id: 'web-021',
+                title: '上海国际航空仲裁院近年典型案例之地服协议仲裁案',
+                type: '案例分析',
+                abstract: '上海国际航空仲裁院处理的地面服务协议典型仲裁案例',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=cases&securityId=yJc5tPX_f1-oMNnXDu39og' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-022',
+                title: '货运代理公司诉托运人拒付运费赔偿纠纷',
+                type: '案例分析',
+                abstract: '货运代理公司与托运人之间的运费拒付赔偿纠纷仲裁案',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=cases&securityId=ydpRuTK2774ON4nS4E4gDQ' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-023',
+                title: '国际航空地面服务协议履行纠纷的仲裁解决',
+                type: '案例分析',
+                abstract: '国际航空地面服务协议履行过程中产生的纠纷仲裁案例',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=arbitrate_informations&securityId=Rr4NBMyLjcDFRQ67stB1tQ' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-024',
+                title: '国际航空仲裁制度的兴起和发展',
+                type: '案例分析',
+                abstract: '国际航空仲裁制度的历史发展与实践现状分析',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=arbitrate_informations&securityId=4LVCu7agI2kelx0DvyznmA' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-025',
+                title: '加拿大法院：扣押飞机不影响涉飞机争议的仲裁解决',
+                type: '案例分析',
+                abstract: '加拿大法院关于飞机扣押与仲裁程序关系的典型案例分析',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=arbitrate_informations&securityId=2EU67tmjeZMVw6EwOjMrEg' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+                        {
+                id: 'web-026',
+                title: '《民用航空法》对我国民航运输发展的意义与完善建议',
+                type: '政策研究',
+                abstract: '分析《民用航空法》对我国民航运输业发展的影响及完善建议',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=arbitrate_informations&securityId=itSi7OwnDuByU8HB3mIjIg' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-027',
+                title: '中国航协开展"高效解决民航商务纠纷助力复工复产"活动',
+                type: '行业动态',
+                abstract: '中国航协推动民航商务纠纷高效解决支持行业复工复产',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=arbitrate_informations&securityId=iPeBLvkMmeSW48WeVPFDqg' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-028',
+                title: '上海仲裁：对标国际最高标准 打响"上海仲裁"品牌',
+                type: '机构发展',
+                abstract: '上海仲裁机构对标国际标准打造仲裁服务品牌',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=arbitrate_informations&securityId=XrrQYRSBFx2HHCvzcRvUig' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-029',
+                title: '中美《适航实施程序》签署并生效',
+                type: '国际合作',
+                abstract: '中美两国《适航实施程序》签署及实施情况分析',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=arbitrate_informations&securityId=kj6GZ-vJ0SdM-M05vsyMxA' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-030',
+                title: '第二届上海国际航空仲裁专家委员会第二次会议成功举办',
+                type: '会议活动',
+                abstract: '上海国际航空仲裁专家委员会第二次会议成果与影响',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=search&securityId=mMFIokdtX9EYszskzAFtyg' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+                        {
+                id: 'web-031',
+                title: '智慧民航，创新未来——上海国际航空仲裁院亮相第二届CATA航空大会',
+                type: '会议活动', 
+                abstract: '上海国际航空仲裁院参与第二届CATA航空大会展示创新成果',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=search&securityId=pFz8Or3PlJAqyJX4KUsUzQ' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-032',
+                title: '第二届上海国际航空仲裁专家委员会第一次会议成功举办',
+                type: '会议活动',
+                abstract: '上海国际航空仲裁专家委员会首次会议成果与行业影响',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=search&securityId=EECVjeOxheH4DAePg7QT-A' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-033',
+                title: '全球首部机构航空仲裁规则在沪诞生',
+                type: '规则发布',
+                abstract: '上海发布全球首部专业航空仲裁规则，提升国际航空争议解决能力',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=search&securityId=yCC1xNvDoTJyLCuI00LI7g' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-034',
+                title: '上海国际仲裁中心航空仲裁规则解读',
+                type: '规则解读',
+                abstract: '权威解读上海国际仲裁中心航空仲裁规则的核心内容与创新点',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=search&securityId=7RIPhsAA5dS2G4yh5AXYZg' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-035',
+                title: '中国民用航空局国际合作服务中心调研上海国际航空仲裁院',
+                type: '机构交流',
+                abstract: '民航局国际合作服务中心主任孟庆芬带队调研上海国际航空仲裁院',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=search&securityId=yyu39wXAkJZK8OaPjKHcfQ' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+                        {
+                id: 'web-036',
+                title: '国际航空运输协会北亚区副总裁调研上海国际航空仲裁院',
+                type: '机构交流',
+                abstract: '国际航协北亚区副总裁解兴权博士带队调研上海国际航空仲裁院',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=search&securityId=9tNwzkA5yGuomldq7_tzug' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-037',
+                title: '上海国际航空仲裁院"2022仲裁助航"专项机制启动',
+                type: '机制创新',
+                abstract: '上海国际航空仲裁院推出专项仲裁服务机制助力行业发展',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=search&securityId=1GJMWsWUvEpMFO-Xox1VVw' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-038',
+                title: '唱响航空仲裁的"中国声音"——上海国际航空仲裁建设探索',
+                type: '发展实践',
+                abstract: '上海国际航空仲裁院在航空仲裁领域的创新实践与国际影响力建设',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=search&securityId=tqXSMdnUI2F-eNJmIXRKCg' },
+                favicon: 'https://www.shiac.org/favicon.ico'
+            },
+            {
+                id: 'web-039',
+                title: '上海国际航空仲裁院西南服务中心揭牌成立',
+                type: '机构建设',
+                abstract: '上海国际航空仲裁院西南服务中心成立暨航空争议模拟仲裁研讨会',
+                links: { url: 'https://www.shiac.org/pc/Aviation?moduleCode=search&securityId=hIveBL3_WXw5KYe7yy8Ydg' },
+                favicon: 'https://www.shiac.org/favicon.ico'
             }
+
+
+
+
+
 
         ]
     };
@@ -338,14 +695,14 @@ document.addEventListener('DOMContentLoaded', initContent);
         return section === 'websites' ? '相关网站' : originalGetTitle(section);
     };
     // 初始化
-    const originalInit = initContent;
+     const originalInit = window.initContent; // 获取全局的initContent
     window.initContent = function() {
-        originalInit();
+        originalInit(); // 调用原始initContent
         const container = document.getElementById('contentContainer');
         container.innerHTML += `
             <section id="websites" class="mb-12">
                 <h2 class="text-2xl font-bold mb-6">相关网站</h2>
-                ${renderCards('websites', database.websites)}
+                ${renderFoldableSection('websites', database.websites)}
             </section>
         `;
     };
@@ -359,8 +716,32 @@ document.addEventListener('DOMContentLoaded', initContent);
             card.style.display = card.textContent.toLowerCase().includes(keyword) ? 'block' : 'none';
         });
     };
+    const DEFAULT_SHOW_ITEMS = 5;
+
+function renderFoldableSection(section, items) {
+    const visibleItems = items.slice(0, DEFAULT_SHOW_ITEMS);
+    const hiddenItems = items.slice(DEFAULT_SHOW_ITEMS);
+    
+    return `
+        <div class="mb-12">
+            ${renderCards(section, visibleItems)}
+            <div class="foldable-content collapsed">
+                ${renderCards(section, hiddenItems)}
+            </div>
+            ${hiddenItems.length > 0 ? `
+            <div class="toggle-fold" onclick="
+                this.previousElementSibling.classList.toggle('collapsed');
+                this.textContent = this.previousElementSibling.classList.contains('collapsed') 
+                    ? '显示更多 (共${items.length}条)' 
+                    : '收起内容';
+            ">显示更多 (共${items.length}条)</div>
+            ` : ''}
+        </div>
+    `;
+}
 })();
 
 </script>
 </body>
 </html>
+
